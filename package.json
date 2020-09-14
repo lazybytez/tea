@@ -1,6 +1,6 @@
 {
   "name": "@lazybytez/tea",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A expandable and customizable CLI",
   "main": "dist/index.js",
   "scripts": {
@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/lazybytez/tea#readme",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/",
     "access": "public"
   },
   "files": [
