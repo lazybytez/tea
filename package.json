@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/lazybytez/tea#readme",
   "publishConfig": {
+    "registry": "https://npm.pkg.github.com/",
     "access": "public"
   },
   "files": [
