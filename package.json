@@ -1,7 +1,7 @@
 {
   "name": "teabrew",
-  "version": "0.0.1-test2",
-  "description": "A expandable and customizable CLI",
+  "version": "0.0.1-alpha",
+  "description": "An expandable and customizable CLI",
   "main": "dist/index.js",
   "scripts": {
     "test": "node ./dist/index.js",
