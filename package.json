@@ -1,6 +1,6 @@
 {
-  "name": "@lazybytez/tea",
-  "version": "0.0.1-test",
+  "name": "teabrew",
+  "version": "0.0.1-test2",
   "description": "A expandable and customizable CLI",
   "main": "dist/index.js",
   "scripts": {

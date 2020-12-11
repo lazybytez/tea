@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 import UpdateChecker from "./classes/UpdateChecker";
-//import IgnoredFilesCache from "./classes/IgnoredFilesCache";
 import Tea from "./classes/Tea";
 
 const checker = new UpdateChecker();
 checker.url = "https://raw.githubusercontent.com/lazybytez/tea/develop/package.json";
 checker.checkForUpdates();
 
-//new IgnoredFilesCache();
 new Tea();
 
 /**
