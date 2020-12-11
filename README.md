@@ -1,56 +1,30 @@
 # Tea
-Tea is a open CLI with the goal to easyli add new commands without creating a whole new CLI for your new project. 
 
----- 
+<div align="center">
+
+Tea is a open CLI with the goal to easyli add new commands **without** creating a whole new CLI for your new project.
 
   ![commit-info][commit-info]
   ![contributors-info][contributors-info]
   ![reposize-info][reposize-info]
 
+</div>
+
 ----
-## Install 
-- If you just want to install the CLI normally without contributing or working on the project:  
+
+## Usage:
+1. To start working with the CLI just add it globally:  
 ```bash
-npm i -g @lazybytez/tea
+npm i -g teabrew
 ```
-`Note: You can also install the CLI with other package mangers such as pnpm or yarn.`
+`Note: You can also install this with other package mangers such as pnpm or yarn.`
+
+2. Then you can use the CLI with the command `tea`
 
 ## Documentation
-If you want know how the CLI is used and how you can add your own commands, please visit the [Wiki](https://github.com/lazybytez/tea/wiki) 
-
-## Requirements:
-- [pnpm](https://pnpm.js.org/en/installation)
-
-## Getting started:
-
-1. Clone the repository
-```bash
-git clone https://github.com/lazybytez/tea.git
-```
-
-2. Install needed packages (we use pnpm as a package manager)
-```bash
-pnpm install
-```
-
-## Developer:
-- Compiles on file-save for development
-```
-pnpm run autobuild
-```
-
-- Compiles and minifies for production
-```
-pnpm run build
-```
-
-- Lints and fixes files
-```
-pnpm run lint
-```
+For Usage, Project Setup and Contribution please visit the **[Wiki](https://github.com/lazybytez/tea/wiki)** 
 
 ## Contributing
-
 If you want to take part in contribution, like fixing issues and contributing directly to the code base, plase visit the [How to Contribute][github-contribute] document.
 
 ## Useful links:
