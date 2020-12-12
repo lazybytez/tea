@@ -1,10 +1,23 @@
 #!/usr/bin/env node
-import UpdateChecker from "./classes/UpdateChecker";
+// import UpdateChecker from "./classes/UpdateChecker";
 import Tea from "./classes/Tea";
 
-const checker = new UpdateChecker();
-checker.url = "https://raw.githubusercontent.com/lazybytez/tea/develop/package.json";
-checker.checkForUpdates();
+function addDays(date: Date, days: number) {
+    const result = new Date(date);
+    result.setDate(date.getDate() + days);
+    return result;
+}
+
+const datetime = new Date();
+console.log(datetime);
+
+console.log(addDays(datetime, 5));
+
+// if (dateInCache !== currentDate) {
+//     const updater = new UpdateChecker();
+//     updater.url = "https://raw.githubusercontent.com/lazybytez/tea/develop/package.json";
+//     updater.checkForUpdates();
+// }
 
 new Tea();
 
@@ -20,5 +33,5 @@ new Tea();
  *
  * Goal:
  *
- * - Execute 'dcc run:pnpm:bas'
+ * - Execute 'tea brew:pnpm:bas'
  */
