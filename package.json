@@ -2,7 +2,7 @@
   "name": "teabrew",
   "version": "0.0.1",
   "description": "An expandable and customizable CLI",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "node ./dist/src/index.js",
     "autobuild": "tsc -p tsconfig.json --watch",
@@ -26,7 +26,7 @@
     "dist"
   ],
   "bin": {
-    "tea": "dist/src/index.js"
+    "tea": "dist/index.js"
   },
   "dependencies": {
     "chalk": "^4.0.0",
