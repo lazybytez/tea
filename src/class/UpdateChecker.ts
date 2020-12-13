@@ -7,16 +7,13 @@ import { version } from "../../package.json";
  */
 export default class UpdateChecker {
 
-    private _url: any
+    private _url: string
 
-    constructor() {
-    }
-
-    public set url(url: URL) {
+    constructor(url: string) {
         this._url = url;
     }
 
-    public get url() : URL {
+    public get url(): string {
         return this._url;
     }
 
@@ -25,13 +22,14 @@ export default class UpdateChecker {
      */
     public checkForUpdates(): void {
         /* set variables */
-        const remoteVersion: URL = this.url;
+        const remoteVersion: string = this.url;
         const self = this;
 
         /* execute function */
         nodefetch(remoteVersion)
-            .then((res: { json: () => any; }) => res.json())
-            .then((data: any) => {
+            .then((response) => { return response.json(); })
+            // .then((res: { json: () => any; }) => res.json())
+            .then((data) => {
                 const versionLocal: number = self.normalizeVersion(version);
                 const versionOnline: number = self.normalizeVersion(data.version);
                 if (versionLocal < versionOnline) {
@@ -40,7 +38,8 @@ export default class UpdateChecker {
                         yellow("│" + " ".repeat(64) + "│") + "\n" +
                         yellow("│" + self.evalStrCenter(version, data.version) + "│") + "\n" +
                         yellow("│" + " ".repeat(64) + "│") + "\n" +
-                        yellow("│" + " ".repeat(17)  + white("Run " + magenta("npm i -g teabrew") + " to update!") + " ".repeat(16) + "│") + "\n" +
+                        yellow("│" + " ".repeat(17)  + white("Run " + magenta("npm i -g teabrew") + " to update!")
+                        + " ".repeat(16) + "│") + "\n" +
                         yellow("│" + " ".repeat(64) + "│") + "\n" +
                         yellow("╰" + "─".repeat(64) + "╯") + "\n\n");
                 }
@@ -56,7 +55,8 @@ export default class UpdateChecker {
      */
     private evalStrCenter(currentVersion: string, remoteVersion: number): string {
         /* set variables */
-        let colorText: string = white("New Tea version available! " + red(currentVersion) + " → " + green(remoteVersion));
+        let colorText: string = white("New Tea version available! " + red(currentVersion) + " → "
+        + green(remoteVersion));
         const plainText: string = "New Tea version available! " + currentVersion + remoteVersion;
         const stringLength: number = plainText.length;
         const lineLength: number = 64;
