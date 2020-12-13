@@ -1,24 +1,8 @@
 #!/usr/bin/env node
-import UpdateChecker from "./classes/UpdateChecker";
-import Tea from "./classes/Tea";
+import Tea from "./class/Tea";
+import UpdateChecker from "./class/UpdateChecker";
 
-const checker = new UpdateChecker();
-checker.url = "https://raw.githubusercontent.com/lazybytez/tea/develop/package.json";
-checker.checkForUpdates();
+const updater = new UpdateChecker("https://raw.githubusercontent.com/lazybytez/tea/develop/package.json");
+updater.checkForUpdates();
 
 new Tea();
-
-/**
- * TODO:
- *
- * - check for updates
- * - check for file permission. (cache)
- * - get all .dcc.json files
- * - get args
- * - let the user navigate in these files
- * - let the user execute the commands or get help
- *
- * Goal:
- *
- * - Execute 'dcc run:pnpm:bas'
- */
