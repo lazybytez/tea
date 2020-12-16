@@ -1,6 +1,6 @@
 import nodefetch from "node-fetch";
 import { yellow, white, magenta, red, green } from "chalk";
-import { version } from "../../package.json";
+import fs from "fs";
 
 /**
  * Compare your current version with the newest version in the GitHub repo.
@@ -25,6 +25,8 @@ export default class UpdateChecker {
         const remoteVersion: string = this.url;
         const self = this;
 
+        const version = self.getLocalVersion();
+
         /* execute function */
         nodefetch(remoteVersion)
             .then((response) => { return response.json(); })
@@ -32,6 +34,9 @@ export default class UpdateChecker {
             .then((data) => {
                 const versionLocal: number = self.normalizeVersion(version);
                 const versionOnline: number = self.normalizeVersion(data.version);
+
+                console.log(versionLocal);
+                console.log(versionOnline);
                 if (versionLocal < versionOnline) {
                     console.log("\n\n" +
                         yellow("╭" + "─".repeat(64) + "╮") + "\n" +
@@ -80,5 +85,17 @@ export default class UpdateChecker {
      */
     private normalizeVersion(version: string): number {
         return parseInt((version.match(/\d+/g) ?? ["0"]).join(""));
+    }
+
+    /**
+     * Gets current version
+     */
+    private getLocalVersion(): string {
+        const fullpath = __dirname + "/../../package.json";
+
+        const rawdata = fs.readFileSync(fullpath, {encoding: "utf8"});
+        const test = JSON.parse(rawdata);
+
+        return test.version;
     }
 }

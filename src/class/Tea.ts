@@ -1,4 +1,5 @@
 import { ExecutedCommand } from "./interface/ExecutedCommand";
+import { LooseObject } from "./interface/LooseObject";
 
 export default class Tea {
 
@@ -18,29 +19,36 @@ export default class Tea {
      * This returns the parsed command line arguments
      */
     private getArgs(): object {
+        // example: pnpm run build && chmod +x dist/src/index.js && ./dist/src/index.js test test:test --test a -test 22
         const args: string[] = process.argv;
         const array = args.slice(2);
+
+        const rawArray: string[] = [];
 
         const parsedArray: ExecutedCommand = {
             cmd: [],
             options: []
         };
 
-        // pnpm run build && chmod +x dist/src/index.js && ./dist/src/index.js test test:test --test a -test 22
-
         array.forEach(element => {
-            const splitArray = element.split(":");
-
-            splitArray.forEach(k => {
-                if (k.startsWith("-") || k.startsWith("--")) {
-                    // parsedArray.options.push(k);
-                    parsedArray.options.push(k);
-                } else {
-                    parsedArray.cmd.push(k);
-                }
+            element.split(":").forEach(element => {
+                rawArray.push(element);
             });
         });
 
-        return parsedArray;
+        for (let i = 0; i < rawArray.length; i++) {
+            const e: string = rawArray[i];
+
+            if (e.startsWith("-") || e.startsWith("--")) {
+                parsedArray.options.push(e);
+            } else {
+                parsedArray.cmd.push(e);
+            }
+        }
+
+        const obj: LooseObject = {};
+        obj["value"] = 22;
+
+        return obj;
     }
 }

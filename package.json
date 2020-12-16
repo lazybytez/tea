@@ -1,10 +1,10 @@
 {
   "name": "teabrew",
-  "version": "0.0.2",
+  "version": "0.0.6",
   "description": "An expandable and customizable CLI",
   "main": "dist/index.js",
   "scripts": {
-    "test": "node ./dist/src/index.js",
+    "test": "node ./dist/index.js",
     "autobuild": "tsc -p tsconfig.json --watch",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint src/**/*.ts --fix"
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "chalk": "^4.0.0",
+    "js-yaml": "^3.14.1",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
