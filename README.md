@@ -2,7 +2,7 @@
 
 <div align="center">
 
-Tea is a open CLI with the goal to easyli add new commands **without** creating a whole new CLI for your new project.
+Tea is a open CLI with the goal to easily add new commands **without** creating a whole new CLI for your new project.
 
   ![commit-info][commit-info]
   ![contributors-info][contributors-info]
@@ -19,7 +19,9 @@ npm i -g teabrew
 ```
 `Note: You can also install this with other package mangers such as pnpm or yarn.`
 
-2. Then you can use the CLI with the command `tea`
+2. Then you can use the CLI with the command: `tea`
+
+More on that here: [How does the CLI work?](https://github.com/lazybytez/tea/wiki/How-does-everything-work)
 
 ## Documentation
 For Usage, Project Setup and Contribution please visit the **[Wiki](https://github.com/lazybytez/tea/wiki)** 
