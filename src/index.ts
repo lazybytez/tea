@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 import Tea from "./class/Tea";
-import UpdateChecker from "./class/UpdateChecker";
+import Teatimer from "./class/Teatimer";
+import Teapot from "./class/Teapot";
 
-const updater = new UpdateChecker("https://raw.githubusercontent.com/lazybytez/tea/develop/package.json");
+new Teapot(__dirname + "/../example/brew.tea.yml", "ExampleCommands");
+
+const updater = new Teatimer("https://raw.githubusercontent.com/lazybytez/tea/develop/package.json");
 updater.checkForUpdates();
 
 new Tea();

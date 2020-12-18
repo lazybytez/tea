@@ -1,0 +1,31 @@
+name: Brew
+prefix: brew
+
+commands:
+    namespaces:
+        - cache:
+            commands:
+                - create:
+                    help: "Creates / Recreates the cache."
+                    run: |
+                        echo test
+                - clear:
+                    help: "Clears / Removes the cache."
+                    run: |
+                        echo
+        - setup:
+            namespaces:
+                - di:
+                    commands:
+                        - compile:
+                            help: "Lädt lange."
+                            run: "a"
+            commands:
+                - upgrade:
+                    help: "Upgrades the instance."
+                    run: |
+                        echo test
+                - install:
+                    help: "Installs the instance."
+                    run: |
+                        echo

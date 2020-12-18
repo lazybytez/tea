@@ -1,4 +1,3 @@
-import { ExecutedCommand } from "./interface/ExecutedCommand";
 import { LooseObject } from "./interface/LooseObject";
 
 export default class Tea {
@@ -25,10 +24,9 @@ export default class Tea {
 
         const rawArray: string[] = [];
 
-        const parsedArray: ExecutedCommand = {
-            cmd: [],
-            options: []
-        };
+        const parsedArray: LooseObject = {};
+        const options: string[] = parsedArray["options"] = [];
+        const cmd: string[] = parsedArray["cmd"] = [];
 
         array.forEach(element => {
             element.split(":").forEach(element => {
@@ -40,15 +38,12 @@ export default class Tea {
             const e: string = rawArray[i];
 
             if (e.startsWith("-") || e.startsWith("--")) {
-                parsedArray.options.push(e);
+                options.push(e);
             } else {
-                parsedArray.cmd.push(e);
+                cmd.push(e);
             }
         }
 
-        const obj: LooseObject = {};
-        obj["value"] = 22;
-
-        return obj;
+        return parsedArray;
     }
 }
