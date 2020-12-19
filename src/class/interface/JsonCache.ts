@@ -1,4 +1,10 @@
+import { TmpYmlJson } from "./TemporaryYmlJson";
+
 export interface JsonCache {
     date: Date,
-    cache: string[]
+    cache: CacheObject
+}
+
+export interface CacheObject {
+    [key: string]: TmpYmlJson
 }

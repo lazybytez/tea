@@ -3,7 +3,7 @@ import { existsSync, writeFile, mkdirSync, readFileSync } from "fs";
 import { JsonCache } from "./interface/JsonCache";
 import { safeLoad } from "js-yaml";
 import { TmpYmlJson } from "./interface/TemporaryYmlJson";
-// import hash from "object-hash";
+import hash from "object-hash";
 
 export default class Teapot {
 
@@ -29,62 +29,30 @@ export default class Teapot {
      * This generates cache of an example file
      */
     public validCache() {
-        /**
-         * 1 Look if cache fily by cache code already exists
-         * 2 If not create it
-         * 3 Make yml from toCacheFile to json
-         * 4 Get json data and insert into cache
-         */
         const cachePath: string = __dirname + "/../../.cache/";
         const cacheName: string = this.cacheCode + ".json";
         const cacheFile: string = cachePath + cacheName;
 
-        //const datetime = new Date();
+        const self = this;
 
-        // "hash(this.jsonRead(this.toCacheFile))"
-
-        if (existsSync(cacheFile)) {
-            console.log(red("\nCache file doesnt exist yet and will be created!\n"));
-
+        if (!existsSync(cacheFile)) {
             const jsonContent: JsonCache = {
                 "date": new Date,
-                "cache": []
+                "cache": {}
             };
-
-            const jsonFile: TmpYmlJson = <TmpYmlJson> this.ymlToJson(this.toCacheFile);
-            jsonContent.cache.push(jsonFile);
-
+            console.log(red("\nCache file doesnt exist yet and will be created!\n"));
             this.jsonCreate(cachePath, cacheFile, jsonContent);
         }
 
-        // if (!this.getFileBuffer().equals(this.getCacheBuffer(cacheFile))) {
-        //     console.log("Files are not same!");
-        // } else {
-        //     console.log("Files are same!");
-        // }
+        const jsonFile: TmpYmlJson = <TmpYmlJson> this.ymlToJson(this.toCacheFile);
 
-        // const fileBuffer = readFileSync(this.toCacheFile);
-        // const cacheBuffer = readFileSync(this.toCacheFile);
-
-        // const content: LooseObject = {};
-        // content["hash"] = fileBuffer;
-        // content["content"] = [];
-
-        // if (fileBuffer.equals(cacheBuffer)) {
-        //     console.log("File did not change!");
-        //     console.log(this.toCacheFile);
-        // } else {
-        //     this.jsonWrite(cacheFile, content);
-        // }
-
-        // // Just get the name of the file
-        // glob(this.toCacheFile, function (err: unknown, files: string[]) {
-        //     if (err) console.log(err);
-        //     files.forEach(e => {
-        //         const filename = path.basename(e, ".tea.yml");
-        //         filename;
-        //     });
-        // });
+        if (!this.jsonRead(cacheFile).cache[cacheFile]
+            || hash(jsonFile) !== this.jsonRead(cacheFile).cache[cacheFile].hash) {
+            const obj = this.jsonRead(cacheFile);
+            obj.cache[cacheFile] = jsonFile;
+            obj.cache[cacheFile].hash = hash(jsonFile);
+            self.jsonWrite(cacheFile, obj);
+        }
     }
 
     /**
@@ -94,7 +62,7 @@ export default class Teapot {
         if (!existsSync(jsonPath)) {
             mkdirSync(jsonPath, { recursive: true });
         }
-        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 4), "utf8", (err: unknown) => {
+        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 2), "utf8", (err: unknown) => {
             if(err) console.log(err);
         });
     }
@@ -103,7 +71,7 @@ export default class Teapot {
      * Writes json files
      */
     public jsonWrite(jsonFilePath: string, jsonContent: unknown) {
-        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 4), "utf8", (err: unknown) => {
+        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 2), "utf8", (err: unknown) => {
             if(err) console.log(err);
         });
     }
@@ -117,22 +85,7 @@ export default class Teapot {
     }
 
     /**
-     * Gets Buffer from file wich will be cached
-     */
-    public getFileBuffer(): Buffer {
-        return readFileSync(this.toCacheFile);
-    }
-
-    /**
-     * Gets Buffer from already cached file
-     */
-    public getCacheBuffer(cacheFile: string): Buffer {
-        const buffer: Buffer = Buffer.from(this.jsonRead(cacheFile));
-        return buffer;
-    }
-
-    /**
-     * Makes yml to json
+     * Converts yml to json
      */
     public ymlToJson(ymlFile: string): object {
         const jsonFile = safeLoad(readFileSync(ymlFile, "utf8"));
