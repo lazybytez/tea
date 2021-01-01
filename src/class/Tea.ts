@@ -1,4 +1,5 @@
-import { LooseObject } from "./interface/LooseObject";
+import { CliArguments, OptionCollection } from "./interface/CliArguments";
+// import Teapot from "./Teapot";
 
 export default class Tea {
 
@@ -10,23 +11,27 @@ export default class Tea {
      * The main function which executes all other functions
      */
     private main(): void {
-        const args: object = this.getArgs();
+        const args: CliArguments = this.getArgs();
         console.log(args);
+
+        // const data = this.getCache();
+        // console.log(data);
     }
 
     /**
      * This returns the parsed command line arguments
      */
-    private getArgs(): object {
-        // example: pnpm run build && chmod +x dist/src/index.js && ./dist/src/index.js test test:test --test a -test 22
+    private getArgs(): CliArguments {
+        // example: chmod +x dist/index.js && ./dist/index.js math do:example -n 42 --force
         const args: string[] = process.argv;
         const array = args.slice(2);
 
         const rawArray: string[] = [];
 
-        const parsedArray: LooseObject = {};
-        const options: string[] = parsedArray["options"] = [];
-        const cmd: string[] = parsedArray["cmd"] = [];
+        const parsedArray: CliArguments = {
+            cmd: [],
+            options: []
+        };
 
         array.forEach(element => {
             element.split(":").forEach(element => {
@@ -38,12 +43,37 @@ export default class Tea {
             const e: string = rawArray[i];
 
             if (e.startsWith("-") || e.startsWith("--")) {
-                options.push(e);
+                let j = i;
+                const futureArray: string = rawArray[++j];
+                let optionValue: unknown = "none";
+
+                if (j !== rawArray.length) {
+                    if (!futureArray.startsWith("-") && !futureArray.startsWith("--")) {
+                        optionValue = futureArray;
+                    }
+                }
+
+                const options: OptionCollection = {
+                    option: e,
+                    value: optionValue
+                };
+
+                parsedArray["options"].push(options);
             } else {
-                cmd.push(e);
+                parsedArray["cmd"].push(e);
             }
         }
 
         return parsedArray;
     }
+
+    /**
+     * Get cache
+     */
+    // private getCache() {
+    //     const cacher = new Teapot();
+    //     cacher.cacheCode = "ExampleCommands";
+    //     const data = cacher.readCache();
+    //     return data.cache;
+    // }
 }

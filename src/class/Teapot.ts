@@ -1,39 +1,47 @@
 import { red } from "chalk";
-import { existsSync, writeFile, mkdirSync, readFileSync } from "fs";
+import { existsSync, writeFileSync, mkdirSync, readFileSync } from "fs";
 import { JsonCache } from "./interface/JsonCache";
 import { safeLoad } from "js-yaml";
 import { TmpYmlJson } from "./interface/TemporaryYmlJson";
 import hash from "object-hash";
+import path from "path";
 
 export default class Teapot {
 
-    private _toCacheFile: string
-
-    public get toCacheFile(): string {
-        return this._toCacheFile;
-    }
-
-    private _cacheCode: string
+    _cacheCode: string = "global"
 
     public get cacheCode(): string {
         return this._cacheCode;
     }
 
-    constructor(toCacheFile: string, cacheCode: string) {
-        this._toCacheFile = toCacheFile;
+    public set cacheCode(cacheCode: string) {
         this._cacheCode = cacheCode;
-        this.validCache();
+    }
+
+    _homeDir = require("os").homedir();
+
+
+    public get homeDir(): string {
+        return this._homeDir;
+    }
+
+    _cachePath = path.join(this.homeDir, ".tea");
+
+
+    public get cachePath(): string {
+        return this._cachePath;
+    }
+
+
+    constructor() {
     }
 
     /**
-     * This generates cache of an example file
+     * This generates cache
      */
-    public validCache() {
-        const cachePath: string = __dirname + "/../../.cache/";
+    public writeCache(toCacheFile: string) {
         const cacheName: string = this.cacheCode + ".json";
-        const cacheFile: string = cachePath + cacheName;
-
-        const self = this;
+        const cacheFile: string = path.join(this.cachePath, cacheName);
 
         if (!existsSync(cacheFile)) {
             const jsonContent: JsonCache = {
@@ -41,39 +49,41 @@ export default class Teapot {
                 "cache": {}
             };
             console.log(red("\nCache file doesnt exist yet and will be created!\n"));
-            this.jsonCreate(cachePath, cacheFile, jsonContent);
+            this.jsonCreate(this.cachePath, cacheFile, jsonContent);
         }
 
-        const jsonFile: TmpYmlJson = <TmpYmlJson> this.ymlToJson(this.toCacheFile);
+        const jsonFile: TmpYmlJson = <TmpYmlJson> this.ymlToJson(toCacheFile);
+        const jsonName: string = jsonFile.name;
+        const obj = this.jsonRead(cacheFile);
+        obj.cache[jsonName] = jsonFile;
+        obj.cache[jsonName].hash = hash(jsonFile);
+        this.jsonWrite(cacheFile, obj);
 
-        if (!this.jsonRead(cacheFile).cache[cacheFile]
-            || hash(jsonFile) !== this.jsonRead(cacheFile).cache[cacheFile].hash) {
-            const obj = this.jsonRead(cacheFile);
-            obj.cache[cacheFile] = jsonFile;
-            obj.cache[cacheFile].hash = hash(jsonFile);
-            self.jsonWrite(cacheFile, obj);
-        }
+    }
+
+    /**
+     * This reads the generated cache
+     */
+    public readCache() {
+        const parsedCache = this.jsonRead("example");
+        return parsedCache;
     }
 
     /**
      * Creates json files
      */
-    public jsonCreate(jsonPath: string, jsonFilePath: string, jsonContent: unknown) {
+    public jsonCreate(jsonPath: string, jsonFilePath: string, jsonContent: JsonCache) {
         if (!existsSync(jsonPath)) {
             mkdirSync(jsonPath, { recursive: true });
         }
-        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 2), "utf8", (err: unknown) => {
-            if(err) console.log(err);
-        });
+        this.jsonWrite(jsonFilePath, jsonContent);
     }
 
     /**
      * Writes json files
      */
     public jsonWrite(jsonFilePath: string, jsonContent: unknown) {
-        writeFile(jsonFilePath, JSON.stringify( jsonContent, null, 2), "utf8", (err: unknown) => {
-            if(err) console.log(err);
-        });
+        writeFileSync(jsonFilePath, JSON.stringify( jsonContent, null, 2), "utf8");
     }
 
     /**

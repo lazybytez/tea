@@ -1,6 +1,6 @@
 {
   "name": "teabrew",
-  "version": "0.0.9",
+  "version": "0.2.12",
   "description": "An expandable and customizable CLI",
   "main": "dist/index.js",
   "scripts": {
