@@ -20,18 +20,15 @@ export default class Teapot {
 
     _homeDir = require("os").homedir();
 
-
     public get homeDir(): string {
         return this._homeDir;
     }
 
     _cachePath = path.join(this.homeDir, ".tea");
 
-
     public get cachePath(): string {
         return this._cachePath;
     }
-
 
     constructor() {
     }
@@ -53,8 +50,12 @@ export default class Teapot {
         }
 
         const jsonFile: TmpYmlJson = <TmpYmlJson> this.ymlToJson(toCacheFile);
-        const jsonName: string = jsonFile.name;
+        const cacheNamespace: string = jsonFile.prefix.toLowerCase();
+        const jsonName: string = cacheNamespace;
         const obj = this.jsonRead(cacheFile);
+
+        // this.transformCache();
+
         obj.cache[jsonName] = jsonFile;
         obj.cache[jsonName].hash = hash(jsonFile);
         this.jsonWrite(cacheFile, obj);
@@ -64,8 +65,18 @@ export default class Teapot {
     /**
      * This reads the generated cache
      */
-    public readCache() {
-        const parsedCache = this.jsonRead("example");
+    public readCache(tmpCacheCode: string) {
+        const tmpJsonFile = path.join(this.cachePath, tmpCacheCode + ".json");
+
+        if (!existsSync(tmpJsonFile)) {
+            const jsonContent: JsonCache = {
+                "date": new Date,
+                "cache": {}
+            };
+            this.jsonCreate(this.cachePath, tmpJsonFile, jsonContent);
+        }
+
+        const parsedCache = this.jsonRead(tmpJsonFile);
         return parsedCache;
     }
 

@@ -1,7 +1,7 @@
 version: 1
 name: Brew
 prefix: brew
-environment: local
+environment: global
 
 namespaces:
     - cache:
