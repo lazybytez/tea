@@ -6,8 +6,7 @@ export interface TmpYmlJson {
 }
 
 export interface NamespaceCollection {
-    namespaces?: NamespaceCollection[],
-    commands: Command[]
+    [key: string]: NamespaceCollection|Command
 }
 
 export interface Command {
