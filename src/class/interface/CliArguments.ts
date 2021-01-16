@@ -1,9 +1,9 @@
 export interface CliArguments {
+    namespace: string,
     cmd: string[],
-    options: OptionCollection[]
+    options: OptionCollection
 }
 
 export interface OptionCollection {
-    option: string,
-    value?: unknown
+    [key: string]: unknown,
 }

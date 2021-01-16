@@ -1,7 +1,8 @@
 import { green, red, yellow } from "chalk";
-import { CliArguments, OptionCollection } from "./interface/CliArguments";
+import { CliArguments } from "./interface/CliArguments";
 import { JsonCache } from "./interface/JsonCache";
 import Teapot from "./Teapot";
+import { execSync } from "child_process";
 
 export default class Tea {
 
@@ -23,7 +24,7 @@ export default class Tea {
         const args: CliArguments = this.getArgs();
 
         // tea
-        if (!args.cmd[0]) {
+        if (!args.namespace) {
             const globalCacheIndex: string[] = <string[]>this.getCache("global", true);
             const localCacheIndex: string[] = <string[]>this.getCache("local", true);
 
@@ -39,34 +40,48 @@ export default class Tea {
                 const e = localCacheIndex[i];
                 console.log(green("    " + e.charAt(0).toUpperCase() + e.slice(1)));
             }
-            console.log("\n");
+            console.log();
         }
 
         // tea init:example:commands
-        if (args.cmd[0] == "init" && args.cmd[1] == "example" && args.cmd[2] == "commands") {
+        if (args.namespace == "init" && args.cmd[0] == "example" && args.cmd[1] == "commands") {
             const cacher = new Teapot();
             cacher.writeCache(__dirname + "/../../example/brew.tea.yml");
 
             console.log(green("\nExample commands successfully created!\n"));
-        } else if (args.cmd[0]) {
+        } else if (args.namespace) {
+            // if there is a namespace given, select current namespace
             const cacheLocal: JsonCache = <JsonCache>this.getCache("global", false);
-            const currentNamespace: string = args.cmd[0].toLowerCase();
-            const tmpCacheIndex = cacheLocal.cache[currentNamespace];
+            const currentNamespace: string = args.namespace.toLowerCase();
+            let tmpCacheIndex = cacheLocal.cache[currentNamespace].commands;
 
+            // for every cmd in args go deeper in the cache file
             for (let i = 0; i < args.cmd.length; i++) {
-                console.log(args.cmd[i]);
-                // tmpCacheIndex[args.cmd[j]];
-                // if (tmpCacheIndex.namespaces) {
-                //     console.log(tmpCacheIndex.namespaces);
-                // }
+                const cmdarg = args.cmd[i];
 
-                // if (obj.help) {
-                //     console.log(obj.help);
-                // }
+                tmpCacheIndex = tmpCacheIndex[cmdarg];
             }
 
-            console.log(tmpCacheIndex.namespaces["cache"]);
-
+            // get sub commands
+            try {
+                if (!tmpCacheIndex.help) {
+                    const commands: string[] = Object.getOwnPropertyNames(tmpCacheIndex);
+                    console.log(yellow("\nAvailable subcommands:"));
+                    for (let i = 0; i < commands.length; i++) {
+                        const e = commands[i];
+                        console.log(green("    " + e));
+                    }
+                    console.log();
+                } else if (tmpCacheIndex.help && args.options["help"]) {
+                    console.log(yellow("\nWhat this command does:"));
+                    console.log(green(tmpCacheIndex.help));
+                    console.log();
+                } else if (tmpCacheIndex.run && !args.options["help"]) {
+                    console.log(green("\n" + execSync(tmpCacheIndex.run).toString()));
+                }
+            } catch (err) {
+                console.log(red("\nThere is no such subcommand!\n"));
+            }
         }
     }
 
@@ -81,8 +96,9 @@ export default class Tea {
         const rawArray: string[] = [];
 
         const parsedArray: CliArguments = {
+            namespace: "",
             cmd: [],
-            options: []
+            options: {}
         };
 
         array.forEach(element => {
@@ -92,7 +108,7 @@ export default class Tea {
         });
 
         for (let i = 0; i < rawArray.length; i++) {
-            const e: string = rawArray[i];
+            let e: string = rawArray[i];
 
             if (e.startsWith("-") || e.startsWith("--")) {
                 let j = i;
@@ -106,12 +122,15 @@ export default class Tea {
                     }
                 }
 
-                const options: OptionCollection = {
-                    option: e,
-                    value: optionValue
-                };
+                if (e.startsWith("-") && !e.startsWith("--")) {
+                    e = e.substring(1);
+                } else if (e.startsWith("--")) {
+                    e = e.substring(2);
+                }
 
-                parsedArray["options"].push(options);
+                parsedArray["options"][e] = optionValue;
+            } else if (i == 0) {
+                parsedArray["namespace"] = e;
             } else {
                 parsedArray["cmd"].push(e);
             }

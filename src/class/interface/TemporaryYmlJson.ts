@@ -2,16 +2,16 @@ export interface TmpYmlJson {
     hash: string,
     name: string,
     prefix: string,
-    namespaces: NamespaceCollection,
+    commands: CommandCollection,
 }
 
-export interface NamespaceCollection {
-    [key: string]: NamespaceCollection|Command
+export interface CommandCollection {
+    [key: string]: CommandCollection|Command
 }
 
 export interface Command {
     help?: string,
-    arguments: CommandArugments[],
+    arguments: CommandArugments,
     run: string
 }
 
