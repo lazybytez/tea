@@ -3,6 +3,7 @@ import { CliArguments } from "./interface/CliArguments";
 import { JsonCache } from "./interface/JsonCache";
 import Teapot from "./Teapot";
 import { execSync } from "child_process";
+import { Command, CommandCollection } from "./interface/TemporaryYmlJson";
 
 export default class Tea {
 
@@ -30,6 +31,7 @@ export default class Tea {
 
             // Get global and local namespaces
             console.log(red("\nPlease enter a namespace you want to access!"));
+            console.log(green("If you want some test commands you can run: ") + yellow("tea init:example:commands"));
             console.log(yellow("\nGlobal Namespaces:"));
             for (let i = 0; i < globalCacheIndex.length; i++) {
                 const e = globalCacheIndex[i];
@@ -53,13 +55,13 @@ export default class Tea {
             // if there is a namespace given, select current namespace
             const cacheLocal: JsonCache = <JsonCache>this.getCache("global", false);
             const currentNamespace: string = args.namespace.toLowerCase();
-            let tmpCacheIndex = cacheLocal.cache[currentNamespace].commands;
+            let tmpCacheIndex: CommandCollection|Command = cacheLocal.cache[currentNamespace].commands;
 
             // for every cmd in args go deeper in the cache file
             for (let i = 0; i < args.cmd.length; i++) {
                 const cmdarg = args.cmd[i];
 
-                tmpCacheIndex = tmpCacheIndex[cmdarg];
+                tmpCacheIndex = <CommandCollection>tmpCacheIndex[cmdarg];
             }
 
             // get sub commands
@@ -77,7 +79,7 @@ export default class Tea {
                     console.log(green(tmpCacheIndex.help));
                     console.log();
                 } else if (tmpCacheIndex.run && !args.options["help"]) {
-                    console.log(green("\n" + execSync(tmpCacheIndex.run).toString()));
+                    console.log(green("\n" + execSync((<Command><unknown>tmpCacheIndex).run).toString()));
                 }
             } catch (err) {
                 console.log(red("\nThere is no such subcommand!\n"));
