@@ -1,34 +1,33 @@
 import nodefetch from "node-fetch";
 import { yellow, white, magenta, red, green } from "chalk";
-import { version } from "../../package.json";
+import fs from "fs";
 
 /**
  * Compare your current version with the newest version in the GitHub repo.
  */
-export default class UpdateChecker {
+export default class Teatimer {
 
     private _url: string
 
-    constructor(url: string) {
-        this._url = url;
-    }
-
     public get url(): string {
         return this._url;
+    }
+
+    constructor(url: string) {
+        this._url = url;
     }
 
     /**
      * If there is a connection to the internet check if update is available.
      */
     public checkForUpdates(): void {
-        /* set variables */
         const remoteVersion: string = this.url;
         const self = this;
 
-        /* execute function */
+        const version = self.getLocalVersion();
+
         nodefetch(remoteVersion)
             .then((response) => { return response.json(); })
-            // .then((res: { json: () => any; }) => res.json())
             .then((data) => {
                 const versionLocal: number = self.normalizeVersion(version);
                 const versionOnline: number = self.normalizeVersion(data.version);
@@ -54,14 +53,12 @@ export default class UpdateChecker {
      * Center text so right and left is space until the box ends
      */
     private evalStrCenter(currentVersion: string, remoteVersion: number): string {
-        /* set variables */
         let colorText: string = white("New Tea version available! " + red(currentVersion) + " → "
         + green(remoteVersion));
         const plainText: string = "New Tea version available! " + currentVersion + remoteVersion;
         const stringLength: number = plainText.length;
         const lineLength: number = 64;
 
-        /* calculate */
         if (stringLength < lineLength) {
             if (stringLength % 2 === 0) {
                 const diffLength = (lineLength - stringLength) / 2;
@@ -80,5 +77,17 @@ export default class UpdateChecker {
      */
     private normalizeVersion(version: string): number {
         return parseInt((version.match(/\d+/g) ?? ["0"]).join(""));
+    }
+
+    /**
+     * Gets current version
+     */
+    private getLocalVersion(): string {
+        const fullpath = __dirname + "/../../package.json";
+
+        const rawdata = fs.readFileSync(fullpath, {encoding: "utf8"});
+        const test = JSON.parse(rawdata);
+
+        return test.version;
     }
 }

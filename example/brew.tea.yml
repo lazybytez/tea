@@ -1,0 +1,37 @@
+version: 1
+name: Brew
+prefix: brew
+environment: global
+
+commands:
+    cache:
+        create:
+          help: "Creates / Recreates the cache."
+          run: |
+              echo "test"
+        clear:
+          help: "Clears / Removes the cache."
+          run: |
+              echo "test"
+    math:
+        do:
+            example:
+                help: "Ein Test Command der Sachen tun soll."
+                arguments:
+                    number:
+                        alias: ["--number", "--num", "-n"]
+                        required: true
+                        type: "integer"
+                        standard: 0
+                    force:
+                        alias: ["--force"]
+                        required: false
+                        type: "boolean"
+                        standard: false
+                run: |
+                    if [ {{force}} ]; then
+                      echo "with force"
+                      elif [ !{{force}} ]; then
+                      echo "without force"
+                    fi
+                    echo {{ number }}

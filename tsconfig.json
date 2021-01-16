@@ -19,7 +19,7 @@
         "strict": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": false
     },
     "include": [
         "src/*",
