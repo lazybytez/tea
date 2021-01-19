@@ -27,7 +27,8 @@ More on that here: [How does the CLI work?](https://github.com/lazybytez/tea/wik
 For Usage, Project Setup and Contribution please visit the **[Wiki](https://github.com/lazybytez/tea/wiki)** 
 
 ## Contributing
-If you want to take part in contribution, like fixing issues and contributing directly to the code base, plase visit the [How to Contribute][github-contribute] document.
+If you want to take part in contribution, like fixing issues and contributing directly to the code base, plase visit the [How to Contribute][github-contribute] document.  
+Dont forget that we use [Conventional Commits][commit-standard]!
 
 ## Useful links:
 [License][github-license] - 
@@ -52,6 +53,8 @@ If you want to take part in contribution, like fixing issues and contributing di
 [github-security]: https://github.com/lazybytez/tea/blob/master/SECURITY.md
 
 [commit-info]: https://img.shields.io/github/last-commit/lazybytez/tea?style=flat-square
+
+[commit-standard]: https://github.com/lazybytez/tea/blob/develop/CONTRIBUTING.md#commits
 
 [contributors-info]: https://img.shields.io/github/contributors/lazybytez/tea?style=flat-square
 

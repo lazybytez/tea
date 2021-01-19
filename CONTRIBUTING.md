@@ -41,19 +41,26 @@ The following things should be noted when working with issues:
 If you don't follow this guidelines, your issue will be closed and labeled as invalid or duplicate.
 
 ### Pull requests, branching and commits
-#### Branching
+### Branching
 Our project uses a very standard branching model. We have the `master` branch that is the most stable branch. It is always the branch that ends up as a release.
 The `develop` branch is our default branch. All contributions will be merged into ´develop´ using pull requests. If you want to contribute, fork the project and make your changes. You should create feature and bug branches. We do not use documentation branches to minify the overhead.
 
-#### Commits
-As we use squash merges in our pull requests, the commit messages of your branch are not that important. But we would be happy if you still use proper messages.
-Orient yourself on the following commit message (Note the upper case first letter and the usage of the imperative form):
-
+### Commits
+Please use commit messages according to https://www.conventionalcommits.org/en/v1.0.0/ 
+(Note the usage of the imperative form):
 ```
-Add this great new feature
+feat: add a caching system
 ```
+Here are some identifiers: 
+```
+fix: If you fixed a bug. This increases the PATCH version
+feat: If you implemented a new feature. This increases the MINOR version
+BREAKING CHANGE: If something important changed. This increases the MAJOR version
+docs:
+```
+Other types could be: `build:, chore:, ci:, docs:, style:, refactor:, perf:, test`
 
-#### Pull requests
+### Pull requests
 When you're ready to create a pull request, use the predefined template for it. Choose a meaningful title (maybe the issues title will fit) and add all required labels.
 It is very important that you link the right issue in the "Solves issue" section of the template, as every PR must be the result of an open issue. 
 
