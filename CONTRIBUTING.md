@@ -56,7 +56,6 @@ Here are some identifiers:
 fix: If you fixed a bug. This increases the PATCH version
 feat: If you implemented a new feature. This increases the MINOR version
 BREAKING CHANGE: If something important changed. This increases the MAJOR version
-docs:
 ```
 Other types could be: `build:, chore:, ci:, docs:, style:, refactor:, perf:, test`
 

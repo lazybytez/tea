@@ -4,15 +4,19 @@ prefix: brew
 environment: global
 
 commands:
-    cache:
-        create:
-          help: "Creates / Recreates the cache."
+    d:
+        start:
+          help: "Starts local docker environment."
           run: |
-              echo "test"
-        clear:
-          help: "Clears / Removes the cache."
+                docker-compose up -d
+        stop:
+          help: "Stops local docker environment."
           run: |
-              echo "test"
+                docker-compose stop
+        restart:
+            help: "Restarts local docker environment."
+            run: |
+                docker-compose restart
     math:
         do:
             example:
@@ -31,7 +35,7 @@ commands:
                 run: |
                     if [ {{force}} ]; then
                       echo "with force"
-                      elif [ !{{force}} ]; then
+                    elif [ !{{force}} ]; then
                       echo "without force"
                     fi
                     echo {{ number }}

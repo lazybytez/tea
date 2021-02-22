@@ -9,7 +9,6 @@ export default class Tea {
 
     _cwd = process.cwd();
 
-
     public get cwd(): string {
         return this._cwd;
     }
@@ -55,34 +54,39 @@ export default class Tea {
             // if there is a namespace given, select current namespace
             const cacheLocal: JsonCache = <JsonCache>this.getCache("global", false);
             const currentNamespace: string = args.namespace.toLowerCase();
-            let tmpCacheIndex: CommandCollection|Command = cacheLocal.cache[currentNamespace].commands;
 
-            // for every cmd in args go deeper in the cache file
-            for (let i = 0; i < args.cmd.length; i++) {
-                const cmdarg = args.cmd[i];
+            if (cacheLocal.cache[currentNamespace]) {
+                let tmpCacheIndex: CommandCollection|Command = cacheLocal.cache[currentNamespace].commands;
 
-                tmpCacheIndex = <CommandCollection>tmpCacheIndex[cmdarg];
-            }
+                // for every cmd in args go deeper in the cache file
+                for (let i = 0; i < args.cmd.length; i++) {
+                    const cmdarg = args.cmd[i];
 
-            // get sub commands
-            try {
-                if (!tmpCacheIndex.help) {
-                    const commands: string[] = Object.getOwnPropertyNames(tmpCacheIndex);
-                    console.log(yellow("\nAvailable subcommands:"));
-                    for (let i = 0; i < commands.length; i++) {
-                        const e = commands[i];
-                        console.log(green("    " + e));
-                    }
-                    console.log();
-                } else if (tmpCacheIndex.help && args.options["help"]) {
-                    console.log(yellow("\nWhat this command does:"));
-                    console.log(green(tmpCacheIndex.help));
-                    console.log();
-                } else if (tmpCacheIndex.run && !args.options["help"]) {
-                    console.log(green("\n" + execSync((<Command><unknown>tmpCacheIndex).run).toString()));
+                    tmpCacheIndex = <CommandCollection>tmpCacheIndex[cmdarg];
                 }
-            } catch (err) {
-                console.log(red("\nThere is no such subcommand!\n"));
+
+                // get sub commands
+                try {
+                    if (!tmpCacheIndex.help) {
+                        const commands: string[] = Object.getOwnPropertyNames(tmpCacheIndex);
+                        console.log(yellow("\nAvailable subcommands:"));
+                        for (let i = 0; i < commands.length; i++) {
+                            const e = commands[i];
+                            console.log(green("    " + e));
+                        }
+                        console.log();
+                    } else if (tmpCacheIndex.help && args.options["help"]) {
+                        console.log(yellow("\nWhat this command does:"));
+                        console.log(green(tmpCacheIndex.help));
+                        console.log();
+                    } else if (tmpCacheIndex.run && !args.options["help"]) {
+                        console.log(green("\n" + execSync((<Command><unknown>tmpCacheIndex).run).toString()));
+                    }
+                } catch (err) {
+                    console.log(red("\nThere is no such subcommand!\n"));
+                }
+            } else {
+                console.log("\n" + red("There is no such command or namespace as: ") + currentNamespace + "\n");
             }
         }
     }
