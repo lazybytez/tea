@@ -59,7 +59,6 @@ export default class Teapot {
         obj.cache[jsonName] = jsonFile;
         obj.cache[jsonName].hash = hash(jsonFile);
         this.jsonWrite(cacheFile, obj);
-
     }
 
     /**
